@@ -129,4 +129,34 @@ public class TicTacToeServiceImplTest {
         assertEquals("The game is end and the winner was: draw", exception.getMessage());
     }
 
+    @Test
+    public void shouldThrowIllegalArgumentExceptionWhenSquareIsOccupied() {
+
+        // Given
+        UUID uuid = UUID.randomUUID();
+        TurnDto turnDto = TurnDto.builder()
+                .id(uuid.toString())
+                .player("O")
+                .col(0)
+                .row(0)
+                .build();
+
+        Board gameById = new Board().toBuilder()
+                .id(uuid)
+                .topLeft(Square.O)
+                .nextPlayer(Square.O)
+                .endBoard(false)
+                .build();
+
+        // When
+        when(ticTacToeRepository.findById(any())).thenReturn(Optional.of(gameById));
+        IllegalArgumentException exception = assertThrows(
+                IllegalArgumentException.class,
+                () -> ticTacToeServiceImpl.play(turnDto)
+        );
+
+        // Then
+        assertEquals("The asked square is occupied row = 0, col = 0 ", exception.getMessage());
+    }
+
 }

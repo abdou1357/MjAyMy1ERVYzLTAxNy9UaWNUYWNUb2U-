@@ -285,4 +285,26 @@ public class TicTacToeServiceImplTest {
         assertEquals("X Player", response.getNextPlayer());
         assertTrue(response.isEndBoard());
     }
+
+    @Test
+    public void shouldThrowIllegalArgumentExceptionWhenBoardDtoIdNotFound() {
+
+        // Given
+        TurnDto turnDto = TurnDto.builder()
+                .id(UUID.randomUUID().toString())
+                .player("O")
+                .row(1)
+                .col(1)
+                .build();
+
+        // When
+        when(ticTacToeRepository.findById(any())).thenReturn(Optional.empty());
+        IllegalArgumentException exception = assertThrows(
+                IllegalArgumentException.class,
+                () -> ticTacToeServiceImpl.play(turnDto)
+        );
+
+        // Then
+        assertEquals(String.format("Board with Id %s is not found!", turnDto.getId()), exception.getMessage());
+    }
 }

@@ -104,4 +104,35 @@ class TicTacToeControllerTest {
         assertEquals("Wrong column information, they should be between 0 and 2!", response.getBody().getMessage());
 
     }
+
+    @Test
+    @DisplayName("The player should be X or O.")
+    void shouldThrowIllegalArgumentExceptionWhenPlayerIsNot_X_or_O() {
+
+        // Given
+        String url = "http://localhost:" + port + "/api/tictactoe/play";
+        TurnDto turnDto = TurnDto.builder()
+                .col(2)
+                .row(0)
+                .player("#")
+                .build();
+
+        MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
+        headers.add("Content-Type", "application/json");
+
+
+        // When
+        ResponseEntity<Error> response = this.restTemplate.exchange(
+
+                url,
+                HttpMethod.POST,
+                new HttpEntity(turnDto, headers),
+                Error.class
+        );
+
+        //Then
+        assertNotNull(response);
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertEquals("Wrong player name, it should be X or O.", response.getBody().getMessage());
+    }
 }

@@ -53,44 +53,50 @@ public class TicTacToeServiceImpl implements TicTacToeService {
         Optional<Board> boardById = ticTacToeRepository.findById(UUID.fromString(turnDto.getId()));
 
         if (boardById.isPresent()) {
-            var board = boardById.get();
-        // Check if the first player is X.
-        if (firstPlayerIsNotX(board,turnDto)) {
-            throw new IllegalArgumentException("The first player should be: " + Square.X);
+            return getBoardDto(turnDto, boardById);
         }
-            // Check if the next player is correct.
-            if (isNotCorrectPlayer(board,turnDto)) {
-                throw new IllegalArgumentException("The next player should be: " + board.getNextPlayer());
-            }
-            // Check if the game is end.
-            if (board.isEndBoard()) {
-                throw new IllegalArgumentException(String.format("The game is end and the winner was: %s", getWinner(board)));
-            }
-            // Check if the asked box is blank.
-            if (!isSquareBlank(boardById.get(), turnDto.getCol(), turnDto.getRow())) {
-                throw new IllegalArgumentException(String.format("The asked square is occupied row = %s, col = %s ", turnDto.getRow(), turnDto.getCol()));
-            }
-            // update the value of the square.
-            updateSquareValue(board, turnDto.getPlayer(), turnDto.getRow(), turnDto.getCol());
-
-            //setting the next player name
-            Square nextPlayer = "O".equals(turnDto.getPlayer()) ? Square.X : Square.O;
-            board.setNextPlayer(nextPlayer);
-
-            // Check if there are a winner.
-            if (isThereIsWinner(board) || isGameTie(board)) {
-                board.setEndBoard(true);
-                logger.info("The winner is: {}", getWinner(board));
-            }
-
-            this.ticTacToeRepository.save(board);
-
-            logger.info("\nWelcome to 3*3 Tic Tac Toe Game: {}\n", board.drawBoard()!= null ? board.drawBoard(): "");
-            return boardMapper.apply(board);
-        }
-        // throw exception.
+        // throw exception if board does not found.
         throw new IllegalArgumentException(String.format("Board with Id %s is not found!", turnDto.getId()));
 
+    }
+
+    private BoardDto getBoardDto(TurnDto turnDto, Optional<Board> boardById) {
+        if(!boardById.isPresent())
+            throw new IllegalArgumentException("missing parameter: ");
+        var board = boardById.get();
+        // Check if the first player is X.
+        if (firstPlayerIsNotX(board, turnDto)) {
+            throw new IllegalArgumentException("The first player should be: " + Square.X);
+        }
+        // Check if the next player is correct.
+        if (isNotCorrectPlayer(board, turnDto)) {
+            throw new IllegalArgumentException("The next player should be: " + board.getNextPlayer());
+        }
+        // Check if the game is end.
+        if (board.isEndBoard()) {
+            throw new IllegalArgumentException(String.format("The game is end and the winner was: %s", getWinner(board)));
+        }
+        // Check if the asked box is blank.
+        if (!isSquareBlank(boardById.get(), turnDto.getCol(), turnDto.getRow())) {
+            throw new IllegalArgumentException(String.format("The asked square is occupied row = %s, col = %s ", turnDto.getRow(), turnDto.getCol()));
+        }
+        // update the value of the square.
+        updateSquareValue(board, turnDto.getPlayer(), turnDto.getRow(), turnDto.getCol());
+
+        //setting the next player name
+        Square nextPlayer = "O".equals(turnDto.getPlayer()) ? Square.X : Square.O;
+        board.setNextPlayer(nextPlayer);
+
+        // Check if there are a winner.
+        if (isThereIsWinner(board) || isGameTie(board)) {
+            board.setEndBoard(true);
+            logger.info("The winner is: {}", getWinner(board));
+        }
+
+        this.ticTacToeRepository.save(board);
+
+        logger.info("\nWelcome to 3*3 Tic Tac Toe Game: {}\n", board.drawBoard()!= null ? board.drawBoard(): "");
+        return boardMapper.apply(board);
     }
 
     /**

@@ -16,12 +16,11 @@ public class ExceptionHandler {
     }
 
     private Error errorMessage(HttpStatus httpStatus, IllegalArgumentException ex, WebRequest request) {
-        var error = Error.builder()
+        return Error.builder()
                 .status(httpStatus)
                 .timestamp(LocalDateTime.now())
                 .message(ex.getMessage())
                 .path(((ServletWebRequest) request).getRequest().getRequestURI())
                 .build();
-        return error;
     }
 }

@@ -4,6 +4,7 @@ import com.poliscrypts.tictactoekata.dto.BoardDto;
 import com.poliscrypts.tictactoekata.dto.TurnDto;
 import com.poliscrypts.tictactoekata.mapper.BoardMapper;
 import com.poliscrypts.tictactoekata.model.Board;
+import com.poliscrypts.tictactoekata.model.enumeration.Square;
 import com.poliscrypts.tictactoekata.repository.TicTacToeRepository;
 import com.poliscrypts.tictactoekata.service.TicTacToeService;
 import org.slf4j.Logger;
@@ -51,7 +52,24 @@ public class TicTacToeServiceImpl implements TicTacToeService {
 
     @Override
     public BoardDto play(TurnDto turnDto) {
+        Optional<Board> boardById = ticTacToeRepository.findById(UUID.fromString(turnDto.getId()));
+
+        if (boardById.isPresent()) {
+            var board = boardById.get();
+        // Check if the first player is X.
+        if (!turnDto.getPlayer().equals("X") && isBoardEmpty(board)) {
+            throw new IllegalArgumentException("The first player should be: " + Square.X);
+        }
+        }
         return null;
+    }
+    private boolean isBoardEmpty(Board board) {
+        List<Square> squares = List.of(
+                board.getTopLeft(), board.getTopCenter(), board.getTopRight(),
+                board.getCenterLeft(), board.getCenter(), board.getCenterRight(),
+                board.getBottomLeft(), board.getBottomCenter(), board.getBottomRight()
+        );
+        return squares.stream().allMatch(b -> b == Square.BLANK);
     }
 
 

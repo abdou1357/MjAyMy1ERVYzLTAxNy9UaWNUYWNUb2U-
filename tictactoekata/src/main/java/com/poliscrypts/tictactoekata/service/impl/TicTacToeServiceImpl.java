@@ -65,6 +65,10 @@ public class TicTacToeServiceImpl implements TicTacToeService {
             if (board.isEndBoard()) {
                 throw new IllegalArgumentException(String.format("The game is end and the winner was: %s", getWinner(board)));
             }
+            // Check if the asked box is blank.
+            if (!isSquareBlank(boardById.get(), turnDto.getCol(), turnDto.getRow())) {
+                throw new IllegalArgumentException(String.format("The asked square is occupied row = %s, col = %s ", turnDto.getRow(), turnDto.getCol()));
+            }
         }
         return null;
     }
@@ -77,6 +81,12 @@ public class TicTacToeServiceImpl implements TicTacToeService {
         return squares.stream().allMatch(b -> b == Square.BLANK);
     }
 
+    /**
+     * 
+     * @param board
+     * @param turnDto
+     * @return true if is not the correct player turn
+     */
     private boolean isNotCorrectPlayer(Board board,TurnDto turnDto){
         return board.getNextPlayer() != Square.BLANK && !board.getNextPlayer().getValue().equals(turnDto.getPlayer());
     }
@@ -109,6 +119,23 @@ public class TicTacToeServiceImpl implements TicTacToeService {
         );
         return winnerCombinations.stream()
                 .anyMatch(combination -> combination.stream().allMatch(b -> squareMap.get(b) == player));
+    }
+
+    /**
+     *
+     * @param board
+     * @param col
+     * @param row
+     * @return true if the given square is blank
+     */
+    private boolean isSquareBlank(Board board, int col, int row) {
+        Map<String, Square> squareMap = Map.of(
+                "00", board.getTopLeft(), "01", board.getTopCenter(), "02", board.getTopRight(),
+                "10", board.getCenterLeft(), "11", board.getCenter(), "12", board.getCenterRight(),
+                "20", board.getBottomLeft(), "21", board.getBottomCenter(), "22", board.getBottomRight()
+        );
+
+        return squareMap.get(String.format("%d%d", row, col)) == Square.BLANK;
     }
 
 

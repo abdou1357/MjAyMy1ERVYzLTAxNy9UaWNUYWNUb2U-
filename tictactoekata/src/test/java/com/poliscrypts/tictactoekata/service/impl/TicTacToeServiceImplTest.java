@@ -158,5 +158,64 @@ public class TicTacToeServiceImplTest {
         // Then
         assertEquals("The asked square is occupied row = 0, col = 0 ", exception.getMessage());
     }
+    @Test
+    public void shouldThrowIllegalArgumentExceptionWhenTheGameIsEndAndWinners_O_withAnyCase() {
+
+        // Given
+        UUID uuid = UUID.randomUUID();
+        TurnDto turnDto = TurnDto.builder()
+                .id(uuid.toString())
+                .player("O")
+                .build();
+
+        Board gameById = new Board().toBuilder()
+                .id(uuid)
+                .nextPlayer(Square.O)
+                .topLeft(Square.O)
+                .topCenter(Square.O)
+                .topRight(Square.O)
+                .endBoard(true)
+                .build();
+
+        // When
+        when(ticTacToeRepository.findById(any())).thenReturn(Optional.of(gameById));
+        IllegalArgumentException exception = assertThrows(
+                IllegalArgumentException.class,
+                () -> ticTacToeServiceImpl.play(turnDto)
+        );
+
+        // Then
+        assertEquals("The game is end and the winner was: O", exception.getMessage());
+    }
+
+    @Test
+    public void shouldThrowIllegalArgumentExceptionWhenTheGameIsEndAndWinners_X_withAnyCase() {
+
+        // Given
+        UUID uuid = UUID.randomUUID();
+        TurnDto turnDto = TurnDto.builder()
+                .id(uuid.toString())
+                .player("X")
+                .build();
+
+        Board gameById = new Board().toBuilder()
+                .id(uuid)
+                .nextPlayer(Square.X)
+                .topLeft(Square.X)
+                .topCenter(Square.X)
+                .topRight(Square.X)
+                .endBoard(true)
+                .build();
+
+        // When
+        when(ticTacToeRepository.findById(any())).thenReturn(Optional.of(gameById));
+        IllegalArgumentException exception = assertThrows(
+                IllegalArgumentException.class,
+                () -> ticTacToeServiceImpl.play(turnDto)
+        );
+
+        // Then
+        assertEquals("The game is end and the winner was: X", exception.getMessage());
+    }
 
 }

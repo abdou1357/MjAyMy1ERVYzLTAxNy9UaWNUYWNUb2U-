@@ -63,6 +63,7 @@ public class TicTacToeServiceImpl implements TicTacToeService {
             }
             // Check if the game is end.
             if (board.isEndBoard()) {
+                System.out.println("hello");
                 throw new IllegalArgumentException(String.format("The game is end and the winner was: %s", getWinner(board)));
             }
             // Check if the asked box is blank.
@@ -82,7 +83,7 @@ public class TicTacToeServiceImpl implements TicTacToeService {
     }
 
     /**
-     * 
+     *
      * @param board
      * @param turnDto
      * @return true if is not the correct player turn

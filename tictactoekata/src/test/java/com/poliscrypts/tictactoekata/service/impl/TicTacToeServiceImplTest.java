@@ -126,7 +126,7 @@ public class TicTacToeServiceImplTest {
         );
 
         // Then
-        assertEquals("The game is end and the winner was: No one", exception.getMessage());
+        assertEquals("The game is end and the winner was: draw", exception.getMessage());
     }
 
 }

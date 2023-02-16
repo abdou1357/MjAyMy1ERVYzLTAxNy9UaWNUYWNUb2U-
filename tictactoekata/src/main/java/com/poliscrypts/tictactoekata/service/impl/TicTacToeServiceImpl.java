@@ -11,10 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class TicTacToeServiceImpl implements TicTacToeService {
@@ -64,6 +61,10 @@ public class TicTacToeServiceImpl implements TicTacToeService {
             if (isNotCorrectPlayer(board,turnDto)) {
                 throw new IllegalArgumentException("The next player should be: " + board.getNextPlayer());
             }
+            // Check if the game is end.
+            if (board.isEndBoard()) {
+                throw new IllegalArgumentException(String.format("The game is end and the winner was: %s", getWinner(board)));
+            }
         }
         return null;
     }
@@ -82,6 +83,32 @@ public class TicTacToeServiceImpl implements TicTacToeService {
 
     private boolean firstPlayerIsNotX(Board board,TurnDto turnDto){
         return !turnDto.getPlayer().equals("X") && isBoardEmpty(board);
+    }
+
+    private String getWinner(Board board) {
+        if (isThereWinnerByName(board, Square.O)) {
+            return Square.O.getValue();
+        }
+        if (isThereWinnerByName(board, Square.X)) {
+            return Square.X.getValue();
+        }
+        return "draw";
+    }
+
+    /**
+     *
+     * @param board
+     * @param player X or O
+     * @return true if there are a winner
+     */
+    private boolean isThereWinnerByName(Board board, Square player) {
+        Map<String, Square> squareMap = Map.of(
+                "00", board.getTopLeft(), "01", board.getTopCenter(), "02", board.getTopRight(),
+                "10", board.getCenterLeft(), "11", board.getCenter(), "12", board.getCenterRight(),
+                "20", board.getBottomLeft(), "21", board.getBottomCenter(), "22", board.getBottomRight()
+        );
+        return winnerCombinations.stream()
+                .anyMatch(combination -> combination.stream().allMatch(b -> squareMap.get(b) == player));
     }
 
 

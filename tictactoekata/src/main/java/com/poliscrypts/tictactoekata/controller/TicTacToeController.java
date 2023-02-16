@@ -20,6 +20,7 @@ public class TicTacToeController {
 
         logger.info("Create new Tic Tac Toe Game.");
 
+
         return ResponseEntity.ok(null);
     }
 }

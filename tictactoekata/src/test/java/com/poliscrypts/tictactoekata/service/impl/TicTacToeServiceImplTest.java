@@ -24,7 +24,7 @@ public class TicTacToeServiceImplTest {
     private TicTacToeServiceImpl ticTacToeServiceImpl;
 
     @Test
-    public void should_create_new_game_successfully() {
+    public void shouldCreateNewGameSuccessfully() {
 
         // Given
         Board board = new Board().toBuilder()

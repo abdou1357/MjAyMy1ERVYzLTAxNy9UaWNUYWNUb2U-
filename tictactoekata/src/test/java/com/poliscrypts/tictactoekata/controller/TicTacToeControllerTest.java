@@ -2,6 +2,7 @@ package com.poliscrypts.tictactoekata.controller;
 
 import com.poliscrypts.tictactoekata.dto.BoardDto;
 import com.poliscrypts.tictactoekata.dto.TurnDto;
+import com.poliscrypts.tictactoekata.exception.Error;
 import com.poliscrypts.tictactoekata.service.TicTacToeService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

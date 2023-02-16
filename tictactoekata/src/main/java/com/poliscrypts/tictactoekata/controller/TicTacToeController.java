@@ -29,7 +29,12 @@ public class TicTacToeController {
 
     @PostMapping("/play")
     public ResponseEntity<BoardDto> playGame(@RequestBody TurnDto turnDto) {
-
+        if (turnDto.getRow() < 0 || turnDto.getRow() > 2) {
+            throw new IllegalArgumentException("Wrong row information, they should be between 0 and 2!");
+        }
+        if (turnDto.getCol() < 0 || turnDto.getCol() > 2) {
+            throw new IllegalArgumentException("Wrong column information, they should be between 0 and 2!");
+        }
         return ResponseEntity.ok(null);
     }
 }

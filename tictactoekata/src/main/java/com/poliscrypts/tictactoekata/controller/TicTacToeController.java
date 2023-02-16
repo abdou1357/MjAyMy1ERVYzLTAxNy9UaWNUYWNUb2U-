@@ -15,12 +15,16 @@ public class TicTacToeController {
     private static final Logger logger = LoggerFactory.getLogger(TicTacToeController.class);
 
     private TicTacToeService ticTacToeService;
+
+    public TicTacToeController(TicTacToeService ticTacToeService) {
+        this.ticTacToeService = ticTacToeService;
+    }
+
     @GetMapping("/create")
     public ResponseEntity<BoardDto> createNewGame() {
 
-        logger.info("Create new Tic Tac Toe Game.");
+        BoardDto boardDto = ticTacToeService.createNewGame();
 
-
-        return ResponseEntity.ok(null);
+        return ResponseEntity.ok(boardDto);
     }
 }

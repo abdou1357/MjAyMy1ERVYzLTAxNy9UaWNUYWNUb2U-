@@ -7,10 +7,11 @@ import com.poliscrypts.tictactoekata.repository.TicTacToeRepository;
 import com.poliscrypts.tictactoekata.service.TicTacToeService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
 import java.util.List;
-
+@Service
 public class TicTacToeServiceImpl implements TicTacToeService {
     private TicTacToeRepository ticTacToeRepository;
 

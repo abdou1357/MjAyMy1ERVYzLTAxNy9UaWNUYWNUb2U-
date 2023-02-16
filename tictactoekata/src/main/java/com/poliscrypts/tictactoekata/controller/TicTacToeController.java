@@ -38,6 +38,6 @@ public class TicTacToeController {
         if (!"X".equals(turnDto.getPlayer()) && !"O".equals(turnDto.getPlayer())) {
             throw new IllegalArgumentException("Wrong player name, it should be X or O.");
         }
-        return ResponseEntity.ok(null);
+        return ResponseEntity.ok(ticTacToeService.play(turnDto));
     }
 }

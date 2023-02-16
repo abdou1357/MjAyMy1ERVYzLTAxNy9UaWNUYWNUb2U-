@@ -21,6 +21,7 @@ import org.springframework.util.MultiValueMap;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -134,5 +135,42 @@ class TicTacToeControllerTest {
         assertNotNull(response);
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
         assertEquals("Wrong player name, it should be X or O.", response.getBody().getMessage());
+    }
+    @Test
+    @DisplayName("The return OK when all information are correct.")
+    void shouldReturnOKWhenAllInformationAreCorrect() {
+
+        // Given
+        String url = "http://localhost:" + port + "/api/tictactoe/play";
+        UUID uuid = UUID.randomUUID();
+        TurnDto turnDto = TurnDto.builder()
+                .id(uuid.toString())
+                .col(2)
+                .row(0)
+                .player("O")
+                .build();
+
+        BoardDto game = BoardDto.builder()
+                .id(uuid)
+                .endBoard(false)
+                .nextPlayer("X")
+                .build();
+
+        MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
+        headers.add("Content-Type", "application/json");
+
+        // When
+        when(ticTacToeService.play(any())).thenReturn(game);
+        ResponseEntity<BoardDto> response = this.restTemplate.exchange(
+                url, HttpMethod.POST, new HttpEntity(turnDto, headers), BoardDto.class);
+
+        //Then
+        assertNotNull(response);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        BoardDto body = response.getBody();
+        assertNotNull(body);
+        assertEquals(uuid, body.getId());
+        assertFalse(body.isEndBoard());
+        assertEquals("X", body.getNextPlayer());
     }
 }

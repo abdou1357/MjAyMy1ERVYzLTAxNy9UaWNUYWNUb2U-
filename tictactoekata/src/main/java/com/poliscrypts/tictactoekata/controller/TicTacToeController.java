@@ -35,6 +35,9 @@ public class TicTacToeController {
         if (turnDto.getCol() < 0 || turnDto.getCol() > 2) {
             throw new IllegalArgumentException("Wrong column information, they should be between 0 and 2!");
         }
+        if (!"X".equals(turnDto.getPlayer()) && !"O".equals(turnDto.getPlayer())) {
+            throw new IllegalArgumentException("Wrong player name, it should be X or O.");
+        }
         return ResponseEntity.ok(null);
     }
 }

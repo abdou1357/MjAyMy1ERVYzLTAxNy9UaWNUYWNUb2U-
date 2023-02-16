@@ -101,4 +101,32 @@ public class TicTacToeServiceImplTest {
         // Then
         assertEquals("The next player should be: O", exception.getMessage());
     }
+
+    @Test
+    public void shouldThrowIllegalArgumentExceptionWhenTheGameIsEnd() {
+
+        // Given
+        UUID uuid = UUID.randomUUID();
+        TurnDto turnDto = TurnDto.builder()
+                .id(uuid.toString())
+                .player("X")
+                .build();
+
+        Board gameById = new Board().toBuilder()
+                .id(uuid)
+                .nextPlayer(Square.X)
+                .endBoard(true)
+                .build();
+
+        // When
+        when(ticTacToeRepository.findById(any())).thenReturn(Optional.of(gameById));
+        IllegalArgumentException exception = assertThrows(
+                IllegalArgumentException.class,
+                () -> ticTacToeServiceImpl.play(turnDto)
+        );
+
+        // Then
+        assertEquals("The game is end and the winner was: No one", exception.getMessage());
+    }
+
 }

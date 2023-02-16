@@ -9,6 +9,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.Optional;
@@ -217,5 +218,71 @@ public class TicTacToeServiceImplTest {
         // Then
         assertEquals("The game is end and the winner was: X", exception.getMessage());
     }
+    @Test
+    public void shouldReturnBoardDtoWithIsWinnerTrue() {
 
+        // Given
+        UUID uuid = UUID.randomUUID();
+        TurnDto turnDto = TurnDto.builder()
+                .id(uuid.toString())
+                .player("O")
+                .row(0)
+                .col(2)
+                .build();
+
+        Optional<Board> gameById = Optional.of(new Board().toBuilder()
+                .id(uuid)
+                .nextPlayer(Square.O)
+                .topLeft(Square.O)
+                .topCenter(Square.O)
+                .build());
+
+        // When
+        when(ticTacToeRepository.findById(any())).thenReturn(gameById);
+        when(ticTacToeRepository.save(any())).thenReturn(Mockito.mock(Board.class));
+        BoardDto response = ticTacToeServiceImpl.play(turnDto);
+
+        // Then
+        assertNotNull(response);
+        assertNotNull(response.getId());
+        assertEquals("X Player", response.getNextPlayer());
+        assertTrue(response.isEndBoard());
+    }
+
+    @Test
+    public void shouldReturnBoardDtoWithIsBoardDTOTieTrue() {
+
+        // Given
+        UUID uuid = UUID.randomUUID();
+        TurnDto turnDto = TurnDto.builder()
+                .id(uuid.toString())
+                .player("O")
+                .row(1)
+                .col(1)
+                .build();
+
+        Optional<Board> gameById = Optional.of(new Board().toBuilder()
+                .id(uuid)
+                .nextPlayer(Square.O)
+                .topLeft(Square.O)
+                .topCenter(Square.X)
+                .topRight(Square.O)
+                .centerLeft(Square.O)
+                .centerRight(Square.X)
+                .bottomLeft(Square.X)
+                .bottomCenter(Square.O)
+                .bottomRight(Square.X)
+                .build());
+
+        // When
+        when(ticTacToeRepository.findById(any())).thenReturn(gameById);
+        when(ticTacToeRepository.save(any())).thenReturn(Mockito.mock(Board.class));
+        BoardDto response = ticTacToeServiceImpl.play(turnDto);
+
+        // Then
+        assertNotNull(response);
+        assertNotNull(response.getId());
+        assertEquals("X Player", response.getNextPlayer());
+        assertTrue(response.isEndBoard());
+    }
 }

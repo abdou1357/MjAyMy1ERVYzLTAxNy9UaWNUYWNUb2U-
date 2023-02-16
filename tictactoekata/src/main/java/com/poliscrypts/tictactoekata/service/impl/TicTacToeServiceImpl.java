@@ -57,9 +57,13 @@ public class TicTacToeServiceImpl implements TicTacToeService {
         if (boardById.isPresent()) {
             var board = boardById.get();
         // Check if the first player is X.
-        if (!turnDto.getPlayer().equals("X") && isBoardEmpty(board)) {
+        if (firstPlayerIsNotX(board,turnDto)) {
             throw new IllegalArgumentException("The first player should be: " + Square.X);
         }
+            // Check if the next player is correct.
+            if (isNotCorrectPlayer(board,turnDto)) {
+                throw new IllegalArgumentException("The next player should be: " + board.getNextPlayer());
+            }
         }
         return null;
     }
@@ -70,6 +74,14 @@ public class TicTacToeServiceImpl implements TicTacToeService {
                 board.getBottomLeft(), board.getBottomCenter(), board.getBottomRight()
         );
         return squares.stream().allMatch(b -> b == Square.BLANK);
+    }
+
+    private boolean isNotCorrectPlayer(Board board,TurnDto turnDto){
+        return board.getNextPlayer() != Square.BLANK && !board.getNextPlayer().getValue().equals(turnDto.getPlayer());
+    }
+
+    private boolean firstPlayerIsNotX(Board board,TurnDto turnDto){
+        return !turnDto.getPlayer().equals("X") && isBoardEmpty(board);
     }
 
 

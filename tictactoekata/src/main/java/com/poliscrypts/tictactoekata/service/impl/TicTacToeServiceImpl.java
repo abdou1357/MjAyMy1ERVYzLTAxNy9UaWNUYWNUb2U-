@@ -1,6 +1,7 @@
 package com.poliscrypts.tictactoekata.service.impl;
 
 import com.poliscrypts.tictactoekata.dto.BoardDto;
+import com.poliscrypts.tictactoekata.dto.TurnDto;
 import com.poliscrypts.tictactoekata.mapper.BoardMapper;
 import com.poliscrypts.tictactoekata.model.Board;
 import com.poliscrypts.tictactoekata.repository.TicTacToeRepository;
@@ -11,6 +12,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
 @Service
 public class TicTacToeServiceImpl implements TicTacToeService {
     private TicTacToeRepository ticTacToeRepository;
@@ -44,6 +48,12 @@ public class TicTacToeServiceImpl implements TicTacToeService {
 
         return boardMapper.apply(board);
     }
+
+    @Override
+    public BoardDto play(TurnDto turnDto) {
+        return null;
+    }
+
 
 }
 

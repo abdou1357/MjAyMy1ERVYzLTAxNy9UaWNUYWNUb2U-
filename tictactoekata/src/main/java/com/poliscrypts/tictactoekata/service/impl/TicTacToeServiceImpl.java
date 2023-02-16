@@ -88,7 +88,9 @@ public class TicTacToeServiceImpl implements TicTacToeService {
             logger.info("\nWelcome to 3*3 Tic Tac Toe Game: {}\n", board.drawBoard()!= null ? board.drawBoard(): "");
             return boardMapper.apply(board);
         }
-        return null;
+        // throw exception.
+        throw new IllegalArgumentException(String.format("Board with Id %s is not found!", turnDto.getId()));
+
     }
 
     /**

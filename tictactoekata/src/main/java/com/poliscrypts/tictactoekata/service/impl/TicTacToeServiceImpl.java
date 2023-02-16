@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.function.Consumer;
 
 @Service
 public class TicTacToeServiceImpl implements TicTacToeService {
@@ -63,16 +64,38 @@ public class TicTacToeServiceImpl implements TicTacToeService {
             }
             // Check if the game is end.
             if (board.isEndBoard()) {
-                System.out.println("hello");
                 throw new IllegalArgumentException(String.format("The game is end and the winner was: %s", getWinner(board)));
             }
             // Check if the asked box is blank.
             if (!isSquareBlank(boardById.get(), turnDto.getCol(), turnDto.getRow())) {
                 throw new IllegalArgumentException(String.format("The asked square is occupied row = %s, col = %s ", turnDto.getRow(), turnDto.getCol()));
             }
+            // update the value of the square.
+            updateSquareValue(board, turnDto.getPlayer(), turnDto.getRow(), turnDto.getCol());
+
+            //setting the next player name
+            Square nextPlayer = "O".equals(turnDto.getPlayer()) ? Square.X : Square.O;
+            board.setNextPlayer(nextPlayer);
+
+            // Check if there are a winner.
+            if (isThereIsWinner(board) || isGameTie(board)) {
+                board.setEndBoard(true);
+                logger.info("The winner is: {}", getWinner(board));
+            }
+
+            this.ticTacToeRepository.save(board);
+
+            logger.info("\nWelcome to 3*3 Tic Tac Toe Game: {}\n", board.drawBoard()!= null ? board.drawBoard(): "");
+            return boardMapper.apply(board);
         }
         return null;
     }
+
+    /**
+     *
+     * @param board
+     * @return true if the board is empty
+     */
     private boolean isBoardEmpty(Board board) {
         List<Square> squares = List.of(
                 board.getTopLeft(), board.getTopCenter(), board.getTopRight(),
@@ -92,10 +115,21 @@ public class TicTacToeServiceImpl implements TicTacToeService {
         return board.getNextPlayer() != Square.BLANK && !board.getNextPlayer().getValue().equals(turnDto.getPlayer());
     }
 
+    /**
+     *
+     * @param board
+     * @param turnDto
+     * @return true if the first player is not X
+     */
     private boolean firstPlayerIsNotX(Board board,TurnDto turnDto){
         return !turnDto.getPlayer().equals("X") && isBoardEmpty(board);
     }
 
+    /**
+     *
+     * @param board
+     * @return the winner
+     */
     private String getWinner(Board board) {
         if (isThereWinnerByName(board, Square.O)) {
             return Square.O.getValue();
@@ -104,6 +138,30 @@ public class TicTacToeServiceImpl implements TicTacToeService {
             return Square.X.getValue();
         }
         return "draw";
+    }
+
+    /**
+     *
+     * @param board
+     * @return true if there is a winner X or O
+     */
+    private boolean isThereIsWinner(Board board) {
+        return isThereWinnerByName(board, Square.O) || isThereWinnerByName(board, Square.X);
+    }
+
+    /**
+     *
+     * @param board
+     * @return true if all the squares are full and no one win the game
+     */
+
+    private boolean isGameTie(Board board) {
+        List<Square> squares = List.of(
+                board.getTopLeft(), board.getTopCenter(), board.getTopRight(),
+                board.getCenterLeft(), board.getCenter(), board.getCenterRight(),
+                board.getBottomLeft(), board.getBottomCenter(), board.getBottomRight()
+        );
+        return squares.stream().allMatch(b -> b != Square.BLANK);
     }
 
     /**
@@ -139,6 +197,22 @@ public class TicTacToeServiceImpl implements TicTacToeService {
         return squareMap.get(String.format("%d%d", row, col)) == Square.BLANK;
     }
 
+    /**
+     *
+     * @param board
+     * @param player
+     * @param row
+     * @param col
+     */
+    private void updateSquareValue(Board board, String player, int row, int col) {
+        Map<String, Consumer<Square>> squares = Map.of(
+                "00", board::setTopLeft, "01", board::setTopCenter, "02", board::setTopRight,
+                "10", board::setCenterLeft, "11", board::setCenter, "12", board::setCenterRight,
+                "20", board::setBottomLeft, "21", board::setBottomCenter, "22", board::setBottomLeft
+        );
+
+        squares.get(String.format("%d%d", row, col)).accept(Square.valueOf(player));
+    }
 
 }
 

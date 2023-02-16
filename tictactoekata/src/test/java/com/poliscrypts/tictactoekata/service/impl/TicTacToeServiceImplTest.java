@@ -14,6 +14,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import java.util.Optional;
 import java.util.UUID;
 
+import static org.junit.Assert.assertThrows;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -72,5 +73,32 @@ public class TicTacToeServiceImplTest {
 
         // Then
         assertEquals("The first player should be: X", exception.getMessage());
+    }
+
+    @Test
+    public void shouldThrowIllegalArgumentExceptionWhenTurnPlayerNameNotEqualNextPlayer() {
+
+        // Given
+        UUID uuid = UUID.randomUUID();
+        TurnDto turnDto = TurnDto.builder()
+                .id(uuid.toString())
+                .player("X")
+                .build();
+
+        Board boardById = Board.builder()
+                .id(uuid)
+                .nextPlayer(Square.O)
+                .build();
+
+        // When
+        when(ticTacToeRepository.findById(any())).thenReturn(Optional.of(boardById));
+
+        IllegalArgumentException exception = assertThrows(
+                IllegalArgumentException.class,
+                () -> ticTacToeServiceImpl.play(turnDto)
+        );
+
+        // Then
+        assertEquals("The next player should be: O", exception.getMessage());
     }
 }

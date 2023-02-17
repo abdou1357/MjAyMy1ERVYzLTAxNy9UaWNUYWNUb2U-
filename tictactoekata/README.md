@@ -31,6 +31,7 @@ The technologies used in this solution are :
  * JUnit
  * Mockito
  * Maven
+ * Swagger/OpenApi
 
 ## Running the application locally
 

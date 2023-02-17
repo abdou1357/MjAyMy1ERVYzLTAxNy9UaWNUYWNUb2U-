@@ -1,0 +1,59 @@
+{
+	"info": {
+		"_postman_id": "18ec0d28-0430-4e0c-9294-358387efc723",
+		"name": "TicTacToeKata",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "6662260"
+	},
+	"item": [
+		{
+			"name": "drawBoard",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8081/api/tictactoe/new",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"api",
+						"tictactoe",
+						"new"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "play",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\": \"f9977e78-9a7e-49a4-b9b8-aae6efe93c01\",\r\n    \"player\": \"X\",\r\n    \"row\": 1,\r\n    \"col\": 1\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8090/api/tictactoe/play",
+					"host": [
+						"localhost"
+					],
+					"port": "8090",
+					"path": [
+						"api",
+						"tictactoe",
+						"play"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

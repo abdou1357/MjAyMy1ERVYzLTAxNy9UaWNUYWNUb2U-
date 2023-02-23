@@ -1,5 +1,7 @@
 ## Welcome to 3*3 Tic Tac Toe Game
 
+![Kata_TicTacToe](https://user-images.githubusercontent.com/47148743/220663195-e1ab21b9-7440-4fa5-a660-fcd908a1518b.png)
+
 ## Description
 
 This project is a solution for TicTacToe Game challenge with Java, Spring boot, JPA, H2 and TTD with JUnit & Mockito, there are two user stories described below:
@@ -12,10 +14,10 @@ Complete description can be found here https://github.com/stephane-genicot/katas
 ## Rules
 * X always goes first.
 * Players cannot play on a played position.
-* Players alternate placing X’s and O’s on the board until either:
+* Players alternate placing Xâ€™s and Oâ€™s on the board until either:
   - One player has three in a row, horizontally, vertically or diagonally
   - All nine squares are filled.
-* If a player is able to draw three X’s or three O’s in a row, that player wins.
+* If a player is able to draw three Xâ€™s or three Oâ€™s in a row, that player wins.
 * If all nine squares are filled and neither player has three in a row, the game is a draw.
 
 
